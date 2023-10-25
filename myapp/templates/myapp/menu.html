@@ -1,0 +1,87 @@
+{% extends 'myapp/main.html' %}
+{% block content %}
+{% load static %}
+        
+        <!-- Page Header Start -->
+        <div class="page-header mb-0">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2>Food Menu</h2>
+                    </div>
+                    <div class="col-12">
+                        <a href="{% url 'index' %}">Home</a>
+                        <a href="{% url 'menu' %}">Menu</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Page Header End -->
+        
+        
+        <!-- Food Start -->
+        <div class="food mt-0">
+            <div class="container">
+                <div class="row align-items-center">
+                    {% for cate in category %}
+                    <div class="col-md-4">
+                        <div class="food-item">
+                            <i class="{{ cate.icon }}"></i>
+                            <h2>{{ cate.name }}</h2>
+                            <p>{{ cate.description }}</p>
+                            <a href="{% url 'alldishes' %}">View Menu</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- Food End -->
+        
+
+<!-- Menu Start -->
+<div class="menu">
+    <div class="container">
+        <div class="section-header text-center">
+            <p>Food Menu</p>
+            <h2>Delicious Food Menu</h2>
+        </div>
+        <div class="menu-tab">
+            <ul class="nav nav-pills justify-content-center">
+                {% for category_item in category %}
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href="#cat_{{  category_item.id  }}">{{ category_item.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>    
+        <div class="tab-content">
+            {% for category_item in category %}
+            <div id="cat_{{ category_item.id }}" class="container tab-pane {% if forloop.first %}active{% endif %}">
+                <div class="row">
+                    <div class="col-lg-7 col-md-12">
+                        {% for dish in category_item.dish_set.all %}
+                        <div class="menu-item">
+                            <div class="menu-img">
+                                <img src="/media/{{ dish.image }}" alt="Image">
+                            </div>
+                            <div class="menu-text">
+                                <h3><span><a href="{% url 'dish' id=dish.id %}" >{{ dish.name }}<strong>${{ dish.price }}</strong></a></span></h3>
+                                <p>{{ dish.ingredients }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-lg-5 d-none d-lg-block">
+                        <img src="/media/{{ category_item.image }}" alt="Image" style="max-width:auto;height:100%;">
+                    </div> 
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        </div>
+    </div>
+</div>
+<!-- Menu End -->
+
+
+    {% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'customadmin/main2.html' %}
+{% load static %}
+{% block content2 %}
+
+{% if messages %}
+{% for message in messages %}
+<script>
+     alert('{{ message }}');
+</script>
+{% endfor %}
+{% endif %}
+
+             <!-- Form Start -->
+             <div class="container-fluid pt-4 px-4 " style='margin:80px 0px; padding-bottom: 300px;' >
+               <div class="row g-4 ">
+                    <div class="bg-secondary rounded h-100 p-4 ">
+                         <h6 class="mb-4 text-center" style="padding:30px;font-size: 20px;"> Dish Items</h6>
+                         <form method="POST" enctype="multipart/form-data">
+                              {% csrf_token %}
+                             <div class="row mb-3">
+                                 <label for="name" class="col-sm-2 col-form-label">Name</label>
+                                 <div class="col-sm-7">
+                                     <input type="text" class="form-control" name="name" value="{{ obj.name }}">
+                                 </div>
+                             </div>
+                             <div class="row mb-3">
+                                 <label for="image" class="col-sm-2 col-form-label">Image</label>
+                                 <div class="col-sm-7">
+                                     <input type="file" class="form-control bg-dark" name="dish_img">
+                                 </div>
+                             </div>
+                             <div class="row mb-3">
+                              <label for="ingredients" class="col-sm-2 col-form-label">Ingredients</label>
+                              <div class="col-sm-7">
+                                   <input type="text" class="form-control" name="ingredients" value="{{ obj.ingredients }}">
+                               </div>
+                          </div>
+                          <div class="row mb-3">
+                              <label for="details" class="col-sm-2 col-form-label">Details</label>
+                              <div class="col-sm-7">
+                                  <textarea class="form-control" name="details" style="height:150px;" placeholder="Details .......">{{obj.details}}</textarea>
+                              </div>
+                          </div>
+                          <div class="row mb-3 ">
+                              <label for="category" class="col-sm-2 col-form-label"> Category </label>
+                              <div class="col-sm-7">
+                              <select class="form-select" name="category">
+                                   <option selected>Select the Category Item</option>
+                                   {% for data in objs %}
+                                   <option value="{{ data.id }}">{{ data.name }}</option>  
+                                   {% endfor %}
+                              </select>
+                              </div>
+                          </div>
+                          <div class="row mb-3">
+                              <label for="price" class="col-sm-2 col-form-label">Price</label>
+                              <div class="col-sm-7">
+                                  <input type="text" class="form-control" name="price" value="{{ obj.price }}">
+                              </div>
+                          </div>
+                          <div class="row mb-3">
+                              <label for="discounted price" class="col-sm-2 col-form-label">Discounted Price</label>
+                              <div class="col-sm-7">
+                                  <input type="text" class="form-control" name="discount_price" value="{{ obj.discount_price }}">
+                              </div>
+                          </div>
+                          <div class="row mb-3">
+                              <div class="form-check col-sm-7">
+                                  <input class="form-check-input" type="checkbox" name="available">
+                                  <label class="form-check-label" for="Is_Available">
+                                      Is_Available
+                                  </label>
+                              </div>
+                          </div>
+                          <div style="padding-top:30px;">
+                             <button type="submit" class="btn btn-primary" name="add_dish">Save</button>
+                          </div>
+                         </form>
+                     </div>
+                 </div>
+    {% endblock  %}
+             

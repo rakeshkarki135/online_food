@@ -1,0 +1,55 @@
+{% extends 'customadmin/main2.html' %}
+{% load static %}
+{% block content2 %}
+
+{% if messages %}
+{% for message in messages %}
+<script>
+     alert('{{ message }}');
+</script>
+{% endfor %}
+{% endif %}
+
+         <!-- Form Start -->
+         <div class="container-fluid pt-4 px-4 " style='margin:80px 0px; padding-bottom: 300px;' >
+          <div class="row g-4 ">
+               <div class="bg-secondary rounded h-100 p-4 ">
+                    <h6 class="mb-4 text-center" style="padding:30px;font-size: 20px;">Carousel Items</h6>
+                    <form method="POST" enctype="multipart/form-data">
+                         {% csrf_token %}
+                        <div class="row mb-3">
+                            <label for="image" class="col-sm-2 col-form-label">Image</label>
+                            <div class="col-sm-7">
+                                <input type="file" class="form-control bg-dark" name="car_img">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                         <label for="ingredients" class="col-sm-2 col-form-label">First Title</label>
+                         <div class="col-sm-7">
+                              <input type="text" class="form-control" name="first_title" value="{{ carousel.first_title }}">
+                          </div>
+                     </div>
+                     <div class="row mb-3">
+                         <label for="ingredients" class="col-sm-2 col-form-label">Span Title</label>
+                         <div class="col-sm-7">
+                              <input type="text" class="form-control" name="span_title" value="{{ carousel.span_title }}">
+                          </div>
+                     </div>
+                     <div class="row mb-3">
+                         <label for="ingredients" class="col-sm-2 col-form-label">Last Title</label>
+                         <div class="col-sm-7">
+                              <input type="text" class="form-control" name="last_title" value="{{ carousel.last_title }}">
+                          </div>
+                     </div>
+                     <div class="row mb-3">
+                         <label for="details" class="col-sm-2 col-form-label">Text</label>
+                         <div class="col-sm-7">
+                             <textarea class="form-control" name="text" style="height:150px;" placeholder="Details ........">{{ carousel.text }}</textarea>
+                         </div>
+                     </div>
+                       <button type="submit" class="btn btn-primary" name="add_carousel" >Save</button>
+                    </form>
+                </div>
+            </div>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'customadmin/main2.html' %}
+{% load static %}
+{% block content2 %}
+
+
+
+
+<style>
+     img {
+          height:auto;
+          width:40px;
+     }
+</style>
+
+{% if messages %}
+{% for message in messages %}
+  <script>
+    alert('{{ message }}')
+  </script>
+{% endfor %}
+{% endif %}
+
+
+
+            <!-- Table Start -->
+            <div class="container-fluid pt-4 px-4" style="margin-top:100px;">
+               <div class="row g-4">
+                   <div class="col-lg-11 col-xl-12 ">
+                       <div class="bg-secondary rounded h-100 p-4">
+                           <h6 class="mb-4 text-center">Carousel  Table</h6>
+                           <table class="table table-hover ">
+                               <thead>
+                                   <tr>
+                                       <th scope="col">Id</th>
+                                       <th scope="col">Image</th>
+                                       <th scope="col">First Tile</th>
+                                       <th scope="col">Span Title</th>
+                                       <th scope="col">Last Title</th>
+                                       <th scope="col">Carousel Text</th>
+                                       <th scope="col">Edit</th>
+                                       <th scope="col">Delete</th>
+                                   </tr>
+                               </thead>
+                               <tbody>
+                                   {% for items in carousel %}
+                                   <tr>
+                                       <th scope="row">{{ items.id }}</th>
+                                       <td><img src="/media/{{ items.image }}"></td>
+                                       <td>{{ items.first_title }}</td>
+                                       <td>{{ items.span_title }}</td>
+                                       <td>{{ items.last_title }}</td>
+                                       <td>{{ items.text }}</td>
+                                       <td><a href="{% url 'carousel_edit' id=items.id %}"  style="color:green;">Edit</a></td>
+                                       <td><a href="{% url 'carousel_delete' id=items.id %}">Delete</a></td> 
+                                   </tr>
+                                   {% endfor %}
+                               </tbody>
+                           </table>
+                       </div>
+                    </div>
+                   </div>
+               </div>
+
+           <!-- Table End -->
+
+{% endblock %}

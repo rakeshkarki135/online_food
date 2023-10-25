@@ -1,0 +1,80 @@
+{% extends 'customadmin/main2.html' %}
+{% load static %}
+{% block content2 %}
+
+
+  
+
+<style>
+     img{
+          height:auto;
+          width:30px;
+     }
+</style>
+
+{% if messages %}
+{% for message in messages %}
+  <script>
+    alert('{{ message }}')
+  </script>
+{% endfor %}
+{% endif %}
+
+
+     
+            <!-- Table Start -->
+            <div class="container-fluid pt-4 px-4" style="margin-top:100px;">
+               <div class="row g-4">
+                   <div class="col-lg-11 col-xl-12 ">
+                       <div class="bg-secondary rounded h-100 p-4">
+                           <h6 class="mb-4 text-center">Dish Table</h6>
+                           <table class="table table-hover ">
+                               <thead>
+                                   <tr>
+                                       <th scope="col">Id</th>
+                                       <th scope="col">Name</th>
+                                       <th scope="col">Image</th>
+                                       <th scope="col">Ingredients</th>
+                                       <th scope="col">Details</th>
+                                       <th scope="col">Category</th>
+                                       <th scope="col">Price</th>
+                                       <th scope="col">Discounted Price</th>
+                                       <th scope="col">Is_Available</th>
+                                       <th scope="col">Added On</th>
+                                       <th scope="col">Updated On</th>
+                                       <th scope="col">Edit</th>
+                                       <th scope="col">Delete</th>
+                                   </tr>
+                               </thead>
+                               <tbody>
+                                   {% for obj in objs %}
+                                   <tr>
+                                       <th scope="row">{{ obj.id }}</th>
+                                       <td>{{ obj.name }}</td>
+                                       <td><img src="/media/{{ obj.image }}"></td>
+                                       <td>{{ obj.ingredients }}</td>
+                                       {% if obj.details %}
+                                       <td>{{ obj.details }}</td>
+                                       {% else %}
+                                       <td>---</td>
+                                       {% endif %}
+                                       <td>{{ obj.category }}</td>
+                                       <td>{{ obj.price }}</td>
+                                       <td>{{ obj.discount_price }}</td>
+                                       <td>{{ obj.is_available }}</td>
+                                       <td>{{ obj.added_on }}</td>
+                                       <td>{{ obj.updated_on }}</td>
+                                       <td><a href="{% url  'dish_edit' id=obj.id %}"  style="color:green;">Edit</a></td>
+                                       <td><a href="{% url 'dish_delete' id=obj.id %}">Delete</a></td> 
+                                   </tr>
+                                   {% endfor %}
+                               </tbody>
+                           </table>
+                       </div>
+                    </div>
+                   </div>
+               </div>
+           
+           <!-- Table End -->
+
+{% endblock %}

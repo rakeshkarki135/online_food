@@ -1,0 +1,223 @@
+
+{% extends "myapp/main.html" %}
+{% load static %}
+{% block content %}
+
+{% if messages %}
+<script>
+    {% for message in messages %}
+       alert("{{message}}");
+       {% endfor %}
+</script>
+{% endif %}
+
+{% if status %}
+ <script>
+    alert("{{ status }}")
+ </script>
+ {% endif %}
+
+<!-- Font Icon -->
+<link rel="stylesheet" href="{% static 'auth/fonts/material-icon/css/material-design-iconic-font.min.css' %}">
+
+<style>
+    .nav-link{
+        color:#719a0a !important;
+    } 
+    .mu-header, nav,header{
+        background-color: black !important;
+    }
+    .dash-content{
+        border:1px solid lightgray;
+        margin:40px 0px;
+    }
+    .dash-content .pics{
+        background-color: gray;
+        color: white;
+        display: inline-block;
+        height: 100px;width: 100px;
+        border-radius: 50%;
+        margin: 30px 0px;
+        font-size: 30px;
+        text-align: center;
+        line-height: 100px;
+        box-shadow: 0px 0px 10px gray;
+    }
+    .container{
+        width: 80%;
+    }
+</style>
+
+
+
+<!-- Start Contact -->
+<section id="mu-contact" style="padding-top:100px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="mu-contact-area">
+                    <div class="mu-heading-area text-center">
+                        <h2 class="mu-heading-title" style="margin-top: 30px;">Welcome To Dashboard</h2>
+                        <span class="mu-header-dot"></span>
+                    </div>
+
+                    <!-- Start Contact Content -->
+                    <div class="mu-contact-content" style="padding-top:50px;">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a href="#dash" class="nav-link" data-toggle="tab">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#edit" class="nav-link" data-toggle="tab">Edit Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#cpass" class="nav-link" data-toggle="tab">Change Password</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#orders" class="nav-link" data-toggle="tab">My Orders
+                                    {% comment %} <span class="badge badge-success badge-pill">({{orders|length}})</span> {% endcomment %}
+                                    <span class="badge badge-success badge-pill">({{profile.get_order_count}})</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'logout_user' %}" class="nav-link" >Logout</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane container-fluid active" id="dash">
+                                <div class="row">
+                                    <div class="col-md-12 text-center dash-content">
+                                        
+                                        {% if profile.profile_pic %}
+                                        <a href="/media/{{profile.profile_pic}}"><img src="/media/{{ profile.profile_pic }}" alt="profile_pic" class="pics"></a>
+                                        {% else %}
+                                        <span class="pics">{{profile.user.first_name.0}}</span>
+                                        {% endif %}
+                   
+                                        <p>{{user.first_name}}</p>
+                                        <p><em>{{user.email}}</em></p>
+                                        <p><strong>Contact: </strong>{{profile.contact_number}}</p>
+                                        <p><strong>Member Since: </strong>{{user.date_joined}}</p>
+                                        <p><strong>Last Login: </strong>{{user.last_login}}</p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane " id="edit">
+                                <div id="form-messages"></div>
+                                <div class="card p-5 ">
+                                    <form method="post" class="mu-contact-form" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="form-group">                
+                                            <input type="text" class="form-control" placeholder="Name" id="name" name="name" value="{{profile.user.first_name}}" required>
+                                        </div>
+                                        <div class="form-group">                
+                                            <input type="email" class="form-control" placeholder="Enter Email" id="email" name="email" value="{{profile.user.email}}" readonly required>
+                                        </div>              
+                                        <div class="form-group">
+                                            <input type="text" class="form-control"  name="contact_number" placeholder="Contact Number" pattern="[0-9]{10}" value="{{profile.contact_number}}" title="Number must contain 10 digits only!" required />
+                                        </div>             
+                                        <div class="form-group">
+                                            <textarea class="form-control" placeholder="Address" id="address" name="address" >{{profile.address}}</textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Change Profile Pic</label>
+                                            <input type="file" class="form-control" name="profile_pic" >
+                                        </div>
+                                        <button type="submit" name="update_profile" style="width: 100%;" class="btn  custom-btn" ><span>Save Changes</span></button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="tab-pane " id="cpass">
+                                <div class="card p-5">
+                                    <form action="" method="post">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label>Current Password</label>
+                                            <input type="password" class="form-control" name="current_password" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <div id="msz"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>New Password</label>
+                                            <input type="password" class="form-control" name="new_password" id="pass" onkeyup="checkPass()" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Repeat New Password</label>
+                                            <input type="password" class="form-control" name="r_new_password" id="re_pass" onkeyup="checkPass()" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="submit" class="btn custom-btn" id="change_pass" name="change_pass" value="Change Password">
+                                        </div>
+                                    </form>
+                                </div>
+                               
+                            </div>
+                            <div class="tab-pane " id="orders">
+                            <h4 class="text-center my-2">Order History</h4>
+
+                             <ul class="list-group"
+                             style="padding-bottom:50px;">
+                                {% for order in ordered_items %}
+                                {% comment %} <a href="{% url 'dish' id=order.item.id %}"> {% endcomment %}
+                                    <li class="list-group-item list-group-item-action">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <img src="/media/{{order.dish.image}}" style="height:70px" class="rounded">
+                                            </div>
+                                             <div class="col-md-8">
+                                                <h4>{{order.dish.name}}</h4>
+                                                <p>Rs.{{order.dish.discount_price}}</p>
+                                                <p class="my-0"><small>INVOICE ID: {{order.invoice_id}}</small></p>
+                                                <p class="font-italic"><small>{{order.dish.ordered_on}}</small></p>
+                                             </div>  
+                                             {% for item in orders %}
+                                             <div class="col-md-2">
+                                                 {% if item.order_status == 'Order Received' %}
+                                                 <button class="btn btn-success btn-sm">Order Received</button>
+                                                 {% elif item.order_status == 'Order Processing' %}
+                                                 <button class="btn btn-light btn-sm">Order Pending</button>
+                                                 {% elif item.order_status == 'Order Completed' %}
+                                                 <button class="btn btn-primary btn-sm">Order Completed</button>
+                                                 {% else %}
+                                                 <button class="btn btn-danger btn-sm">Order Cancelled</button>
+                                                 {% endif %}
+                                             </div>
+                                             {% endfor %}
+                                        </div>
+                                    </li>
+                                    </a>
+                                {% endfor %}
+                             </ul>
+                            </div>
+
+                        </div>
+
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Contact -->
+
+
+<script>
+    function checkPass(){
+        var p = $('#pass').val();
+        var cp = $('#re_pass').val();
+        if(p==cp){
+            $("#change_pass").attr('disabled',false).css({'background':'#fbaf32'});
+            $('#msz').html('');
+        }else{
+
+            $("#change_pass").attr('disabled',true).css({'background':'red'});
+            $('#msz').html("<small>Password didn't matched!</small>");
+
+        }
+    }
+</script>
+
+{% endblock %}

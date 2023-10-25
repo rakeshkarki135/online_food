@@ -1,0 +1,77 @@
+{% extends "myapp/main.html" %}
+{% load static %}
+{% block content %} 
+
+<style>
+    .btn-danger:hover{
+        background-color:white;
+        color:red;
+    }
+</style>
+
+<!-- Page Header Start -->
+<div class="page-header mb-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2>{{ dish.name }}</h2>
+            </div>
+            <div class="col-12">
+                <!-- getting alldishes data  from category according to id -->
+                <a href="/alldishes/?q={{dish.category.id}}">{{ dish.category.name }}</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+
+<!-- Food Start -->
+<div class="food mt-0">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 mx-auto">
+                <div class="food-item">
+                    <a href="/media/{{dish.image}}" target="_blank"><img src="/media/{{dish.image}}" style="height: 300px;width: 100%;"></a>
+                    <h2 class="my-3">{{ dish.name }}</h2>
+                    <p>
+                        {{ dish.details }}
+                    </p>
+                    <h4 class="menu-text" style="font-weight: normal;">
+                        {% if dish.price != dish.discount_price %}
+                            <strong><del>Rs.{{ dish.price }}</del></strong>  
+                        {% endif %}
+                             <strong>Rs.{{ dish.discount_price }}</strong>
+                    </h4>
+                    <p>
+                        <script>
+                            var ing = '{{dish.ingredients}}'.split(',');
+                            for(ingredient in ing){
+                                document.write("<span class='btn btn-sm mr-1 mb-1 btn-outline-success'>"+ing[ingredient]+"</span>");
+                            }
+                        </script>
+                    </p>
+                    {% if dish.is_available %}
+
+                       <!-- if dish is available -->
+                    {% if user.is_superuser or user.is_staff %}
+                    {% elif user.is_active %}
+                        {% comment %} {{form.render}} {% endcomment %}
+                        <a href="{% url 'add_to_cart' id=dish.id %}" class="btn btn-danger"style="font-size:13px;top:-15px;right:-100px;margin-bottom:30px;">Add to Cart</a>
+                    {% else %}
+                        <p><a href="{% url 'signin' %}">Login to Buy</a> </p>
+                    {% endif %}
+                    
+                        <!--- if dish is not availabe -->
+                    {% else %}
+                        <p class="text-danger">Not Available for delivery!</p>
+                    {% endif %}
+
+                    <a href="/alldishes/?q={{ dish.category.id }}" style="left:-50px;">More Dishes under {{ dish.category.name }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Food End -->
+{% endblock %}
