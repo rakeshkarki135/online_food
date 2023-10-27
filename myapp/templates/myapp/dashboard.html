@@ -172,7 +172,7 @@
                                                 <p class="my-0"><small>INVOICE ID: {{order.invoice_id}}</small></p>
                                                 <p class="font-italic"><small>{{order.dish.ordered_on}}</small></p>
                                              </div>  
-                                             {% for item in orders %}
+                                             {% comment %} {% for item in orders %}
                                              <div class="col-md-2">
                                                  {% if item.order_status == 'Order Received' %}
                                                  <button class="btn btn-success btn-sm">Order Received</button>
@@ -184,7 +184,7 @@
                                                  <button class="btn btn-danger btn-sm">Order Cancelled</button>
                                                  {% endif %}
                                              </div>
-                                             {% endfor %}
+                                             {% endfor %} {% endcomment %}
                                         </div>
                                     </li>
                                     </a>
