@@ -65,22 +65,31 @@ def feature(request):
 def signin(request):
      context={}
      if request.method == "POST":
-          email = request.POST.get('email')
+          username = request.POST.get('email')
           psw = request.POST.get('password')
           
-          check_user = authenticate(username=email,password=psw)
-          if check_user: 
-               login(request , check_user)
-               messages.info(request,'logged in Successfully')
-               # redirect to dashboard link here
-               if check_user.is_superuser or check_user.is_staff:
-                    return redirect('/admin/')
-               # context.update({'message':'Login Success','class':'alert-success'})
-               return redirect('index')
+          try:
+               user_obj = User.objects.filter(username=username).first()
                
-          else:
-               context.update({'message':'Invalid Login Details','class':'alert-danger' })
-          
+               if user_obj is None:
+                    context.update({'message':' User doesnot exist' , 'class':'alert-danger'})
+                    return render(request, 'myapp/signin.hmtl' , context)
+               
+               check_user = authenticate(username=username,password=psw)
+               if check_user: 
+                    login(request , check_user)
+                    messages.info(request,'logged in Successfully')
+                    # redirect to dashboard link here
+                    if check_user.is_superuser or check_user.is_staff:
+                         return redirect('/admin/')
+                    # context.update({'message':'Login Success','class':'alert-success'})
+                    return redirect('index')
+                    
+               else:
+                    context.update({'message':'Invalid Login Details','class':'alert-danger' })
+                    return render(request, 'myapp/signin.html', context)
+          except Exception as e:
+               pass
      
      return render(request ,  'myapp/signin.html',context)
 
@@ -155,20 +164,25 @@ def register(request):
           
           
           try:
-            # save data to both tables
-            user=User.objects.create_user(email ,email , password)
-            user.first_name=name
-            user.save()
-          
-            # creating profiles
-            profile=Profile(user=user,contact_number=contact)
-            profile.save()
-            context['status']= f"User {name} Registered Successfully!"
-            return redirect('signin')
-          except:
-            context['error']= f"A user with this email already exists"
-          
-          
+               if User.objects.filter(email=email).first():
+                    messages.info(request, 'Email is already taken')
+                    return redirect('register')
+               elif User.objects.filter(username=name).first():
+                    messages.info(request, 'Username is already taken')
+                    return redirect('register')
+               else:
+                    # save data to both tables
+                    user=User.objects.create_user(username=name,email=email,password=password)
+                    user.save()
+                    
+                    # creating profiles
+                    profile=Profile(user=user,contact_number=contact)
+                    profile.save()
+                    context['status'] = f"User {name} Registered Successfully!"
+                    return render(request, 'myapp/signin.html', context)
+               
+          except Exception as e:
+               pass
      return render(request , 'myapp/register.html', context)
 
 
@@ -322,6 +336,8 @@ def checkout(request):
                 # Save the order to the database
 
                 messages.success(request, "Order placed successfully")
+                user_cart=0
+                total_price=0
                 return redirect('alldishes')  # Redirect to the thank you page
 
             except Exception as e:
